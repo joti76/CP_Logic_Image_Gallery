@@ -1,7 +1,12 @@
+using CP_Logic_Image_Gallery.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Register the DbContext with dependency injection
+builder.Services.AddSingleton<DbContext>();
 
 var app = builder.Build();
 
