@@ -1,23 +1,28 @@
-using CP_Logic_Image_Gallery.Data;
-using Microsoft.Data.Sqlite;
-using System.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using CP_Logic_Image_Gallery.Data; // <-- Your DbContext namespace
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Add services to the container
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// ADD this line (Dapper registration)
-builder.Services.AddScoped<IDbConnection>(sp =>
-    new SqliteConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Register EF Core DbContext
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(connectionString));
+
+// Register Identity
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure HTTP request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -26,10 +31,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // IMPORTANT for Identity
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages(); // Enables Identity pages
 
 app.Run();
