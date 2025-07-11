@@ -1,12 +1,22 @@
-﻿namespace CP_Logic_Image_Gallery.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CP_Logic_Image_Gallery.Models;
+
+public class Folder
 {
-    public class Folder
-    {
-        public int Id { get; set; }
-        public int? Parent_Id { get; set; } // For nested folders
-        public string User_Id { get; set; }
-        public DateTime Date { get; set; }
-        public bool Enabled { get; set; }
-        public string Description { get; set; }
-    }
+    [Key]
+    public int Id { get; set; }
+
+    public int? Parent_Id { get; set; }
+
+    public string? User_Id { get; set; }
+
+    public DateTime Date { get; set; } = DateTime.Now;
+
+    public bool Enabled { get; set; }
+
+    public string? Description { get; set; }
+
+    // Navigation property (optional)
+    public ICollection<Image>? Images { get; set; }
 }

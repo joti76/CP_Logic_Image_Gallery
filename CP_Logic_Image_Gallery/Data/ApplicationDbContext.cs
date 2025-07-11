@@ -8,6 +8,6 @@ public class ApplicationDbContext : IdentityDbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
 
-    public DbSet<Image> Images { get; set; }
     public DbSet<Folder> Folders { get; set; }
+    public DbSet<Image> Images { get; set; }
 }
